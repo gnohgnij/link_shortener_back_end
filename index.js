@@ -1,7 +1,9 @@
 const express = require("express");
 const connecDB = require("./config/db");
+const cors = require("cors");
 
 const app = express();
+app.use(cors());
 
 //connect to db
 connecDB();
