@@ -14,7 +14,7 @@ mongoose.connect(process.env.DATABASE, { useNewUrlParser: true }, () => {
 app.use("/", require("./routes/index"));
 app.use("/api/url", require("./routes/url"));
 
-const PORT = process.env.PORT;
-app.listen(PORT, () => {
+const PORT = 3000;
+app.listen(PORT || process.env.PORT, () => {
   console.log(`server running on port ${PORT}`);
 });

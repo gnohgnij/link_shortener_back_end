@@ -3,6 +3,10 @@ const router = express.Router();
 
 const Url = require("../models/url");
 
+router.get("/", (req, res) => {
+  res.json(`hello world`);
+});
+
 //GET
 //Redirect shortUrl to originalUrl
 router.get("/:urlCode", async (req, res) => {
