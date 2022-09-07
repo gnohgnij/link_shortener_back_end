@@ -19,7 +19,7 @@ router.get("/:urlCode", async (req, res) => {
       return res.status(404).json(`no url found`);
     }
   } catch (err) {
-    console.error(error);
+    console.error(err);
     res.status(500).json(`server error`);
   }
 });
