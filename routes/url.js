@@ -9,7 +9,7 @@ const Url = require("../models/url");
 //create short url
 router.post("/shorten", async (req, res) => {
   const originalURL = req.body.originalURL;
-  const baseUrl = "https://infinite-headland-99069.herokuapp.com/";
+  const baseUrl = "https://shawwty.herokuapp.com/";
 
   //Check base url
   if (!validUrl.isUri(baseUrl)) {
