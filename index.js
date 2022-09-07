@@ -1,14 +1,13 @@
 const express = require("express");
-const mongoose = require("mongoose");
+const connecDB = require("./config/db");
 
 const app = express();
 
+//connect to db
+connecDB();
+
 //allows accepting of json data
 app.use(express.json({ extended: false }));
-
-mongoose.connect(process.env.DATABASE, { useNewUrlParser: true }, () => {
-  console.log(`connected to DB`);
-});
 
 app.use("/", require("./routes/index"));
 app.use("/api/url", require("./routes/url"));
