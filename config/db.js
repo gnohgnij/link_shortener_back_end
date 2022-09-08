@@ -1,17 +1,10 @@
-//function to connect to MongoDB
+const mysql = require("mysql");
 
-const mongoose = require("mongoose");
+const db = mysql.createConnection({
+  host: process.env.HOST,
+  user: process.env.USER,
+  password: process.env.PASSWORD,
+  database: process.env.DATABASE,
+});
 
-const connecDB = async () => {
-  try {
-    await mongoose.connect(process.env.DATABASE, {
-      useNewUrlParser: true,
-    });
-
-    console.log(`connected to mongodb`);
-  } catch (err) {
-    console.error(err.message);
-  }
-};
-
-module.exports = connecDB;
+module.exports = db;

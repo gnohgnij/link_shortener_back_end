@@ -3,7 +3,7 @@ const router = express.Router();
 const validUrl = require("valid-url");
 const shortid = require("shortid");
 
-const Url = require("../models/url");
+const db = require("../config/db");
 
 //POST
 //create short url
@@ -19,28 +19,38 @@ router.post("/shorten", async (req, res) => {
   //Create url code
   const urlCode = shortid.generate();
 
-  //Check long url
+  //Check originalURL
   if (validUrl.isUri(originalURL)) {
     try {
-      let url = await Url.findOne({ originalURL: originalURL });
-
-      if (url) {
-        res.json({ url: url });
-      } else {
-        const newURL = baseUrl + "/" + urlCode;
-
-        url = new Url({
-          urlCode: urlCode,
-          originalURL: originalURL,
-          newURL: newURL,
-        });
-
-        await url.save();
-        res.json({ url: url });
-      }
+      const query = "SELECT * FROM urls WHERE originalURL = ?";
+      db.query(query, [originalURL], (error, results) => {
+        if (error) {
+          res.json({ status: "error", reason: error.code });
+        }
+        if (!results[0]) {
+          const newURL = baseUrl + "/" + urlCode;
+          const data = {
+            urlCode: urlCode,
+            originalURL: originalURL,
+            newURL: newURL,
+          };
+          db.query(
+            "INSERT INTO urls VALUES (?, ?, ?)",
+            Object.values(data),
+            (error, results) => {
+              if (error) {
+                console.error(error);
+              } else {
+                res.json({ url: data });
+              }
+            }
+          );
+        } else {
+          res.json({ url: results[0] });
+        }
+      });
     } catch (err) {
-      console.log(err);
-      res.status(500).json(`server error`);
+      res.json({ status: "error", reason: err });
     }
   } else {
     res.status(401).json(`invalid original url`);

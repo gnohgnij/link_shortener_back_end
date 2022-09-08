@@ -1,27 +1,20 @@
 const express = require("express");
+
+const db = require("../config/db");
+
 const router = express.Router();
 
-const Url = require("../models/url");
-
-router.get("/", (req, res) => {
-  res.json(`hello world`);
-});
-
 //GET
-//Redirect shortUrl to originalUrl
+//Redirect newURL to originalUrl
 router.get("/:urlCode", async (req, res) => {
-  try {
-    const url = await Url.findOne({ urlCode: req.params.urlCode });
-
-    if (url) {
-      return res.redirect(url.originalURL);
+  const query = "SELECT * FROM urls WHERE urlCode = ?";
+  db.query(query, [req.params.urlCode], (error, results) => {
+    if (!results[0]) {
+      res.json({ status: `urlCode not found` });
     } else {
-      return res.status(404).json(`no url found`);
+      res.redirect(results[0].originalURL);
     }
-  } catch (err) {
-    console.error(err);
-    res.status(500).json(`server error`);
-  }
+  });
 });
 
 module.exports = router;
