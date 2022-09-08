@@ -1,6 +1,6 @@
 const express = require("express");
 
-const db = require("../config/db");
+const pool = require("../config/pool");
 
 const router = express.Router();
 
@@ -8,7 +8,10 @@ const router = express.Router();
 //Redirect newURL to originalUrl
 router.get("/:urlCode", async (req, res) => {
   const query = "SELECT * FROM urls WHERE urlCode = ?";
-  db.query(query, [req.params.urlCode], (error, results) => {
+  pool.query(query, [req.params.urlCode], (error, results) => {
+    if (error) {
+      res.json({ status: "error", reason: error.code });
+    }
     if (!results[0]) {
       res.json({ status: `urlCode not found` });
     } else {

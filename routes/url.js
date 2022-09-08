@@ -1,9 +1,10 @@
 const express = require("express");
-const router = express.Router();
 const validUrl = require("valid-url");
 const shortid = require("shortid");
 
-const db = require("../config/db");
+const pool = require("../config/pool");
+
+const router = express.Router();
 
 //POST
 //create short url
@@ -23,7 +24,7 @@ router.post("/shorten", async (req, res) => {
   if (validUrl.isUri(originalURL)) {
     try {
       const query = "SELECT * FROM urls WHERE originalURL = ?";
-      db.query(query, [originalURL], (error, results) => {
+      pool.query(query, [originalURL], (error, results) => {
         if (error) {
           res.json({ status: "error", reason: error.code });
         }
@@ -34,12 +35,12 @@ router.post("/shorten", async (req, res) => {
             originalURL: originalURL,
             newURL: newURL,
           };
-          db.query(
+          pool.query(
             "INSERT INTO urls VALUES (?, ?, ?)",
             Object.values(data),
             (error, results) => {
               if (error) {
-                console.error(error);
+                res.json({ status: "error", reason: error.code });
               } else {
                 res.json({ url: data });
               }
