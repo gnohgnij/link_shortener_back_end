@@ -12,7 +12,7 @@ app.use(express.json({ extended: false }));
 app.use("/", require("./routes/index"));
 app.use("/api/url", require("./routes/url"));
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3306;
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });

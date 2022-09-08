@@ -22,35 +22,36 @@ router.post("/shorten", async (req, res) => {
 
   //Check originalURL
   if (validUrl.isUri(originalURL)) {
-    try {
-      const query = "SELECT * FROM urls WHERE originalURL = ?";
-      pool.query(query, [originalURL], (error, results) => {
-        if (error) {
-          const newURL = baseUrl + "/" + urlCode;
-          const data = {
-            urlCode: urlCode,
-            originalURL: originalURL,
-            newURL: newURL,
-          };
-          pool.query(
-            "INSERT INTO urls VALUES (?, ?, ?)",
-            Object.values(data),
-            (error, results) => {
-              if (error) {
-                res.json({ status: "error", reason: error.code });
-              } else {
-                res.json({ url: data });
-              }
-            }
-          );
-        }
+    const query = "SELECT * FROM urls WHERE originalURL = ?";
+    pool.query(query, [originalURL], (error, results) => {
+      if (error) {
+        return res.json({ status: "error", reason: error.code });
+      }
+
+      if (results[0]) {
         res.json({ url: results[0] });
-      });
-    } catch (err) {
-      res.json({ status: "error", reason: err });
-    }
+      } else {
+        const newURL = baseUrl + "/" + urlCode;
+        const data = {
+          urlCode: urlCode,
+          originalURL: originalURL,
+          newURL: newURL,
+        };
+        pool.query(
+          "INSERT INTO urls VALUES (?, ?, ?)",
+          Object.values(data),
+          (error, results) => {
+            if (error) {
+              return res.json({ status: "error", reason: error.code });
+            } else {
+              res.json({ url: data });
+            }
+          }
+        );
+      }
+    });
   } else {
-    res.status(401).json(`invalid original url`);
+    res.json(`invalid original url`);
   }
 });
 
