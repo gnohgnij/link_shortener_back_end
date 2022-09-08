@@ -40,6 +40,7 @@ router.post("/shorten", async (req, res) => {
         connect.query(
           "INSERT INTO urls VALUES (?, ?, ?)",
           Object.values(data),
+
           (error, results) => {
             if (error) {
               return res.json({ status: "error", reason: error.code });
