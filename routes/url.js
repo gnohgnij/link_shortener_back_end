@@ -26,9 +26,6 @@ router.post("/shorten", async (req, res) => {
       const query = "SELECT * FROM urls WHERE originalURL = ?";
       pool.query(query, [originalURL], (error, results) => {
         if (error) {
-          res.json({ status: "error", reason: error.code });
-        }
-        if (!results[0]) {
           const newURL = baseUrl + "/" + urlCode;
           const data = {
             urlCode: urlCode,
@@ -46,9 +43,8 @@ router.post("/shorten", async (req, res) => {
               }
             }
           );
-        } else {
-          res.json({ url: results[0] });
         }
+        res.json({ url: results[0] });
       });
     } catch (err) {
       res.json({ status: "error", reason: err });
