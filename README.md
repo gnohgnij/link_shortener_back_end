@@ -4,6 +4,8 @@ Framework: ExpressJS
 
 Database: MySQL
 
+Click [here](https://github.com/gnohgnij/link_shortener) to view the repository for the front end
+
 ## Schema
 
 **URLS**
@@ -15,6 +17,8 @@ Database: MySQL
 | newURL      | varchar(255), the generated shortened URL                                         |
 
 **API**
+
+Base URL: https://shawwty.herokuapp.com/
 
 GET /:urlCode
 
