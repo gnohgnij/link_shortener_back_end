@@ -2,7 +2,7 @@ const express = require("express");
 const validUrl = require("valid-url");
 const shortid = require("shortid");
 
-const connect = require("../config/db");
+const pool = require("../config/db");
 
 const router = express.Router();
 
@@ -23,33 +23,36 @@ router.post("/shorten", async (req, res) => {
   //Check originalURL
   if (validUrl.isUri(originalURL)) {
     const query = "SELECT * FROM urls WHERE originalURL = ?";
-    connect.query(query, [originalURL], (error, results) => {
-      if (error) {
-        return res.json({ status: "error", reason: error.code });
-      }
 
-      if (results[0]) {
-        res.json({ url: results[0] });
-      } else {
-        const newURL = baseUrl + "/" + urlCode;
-        const data = {
-          urlCode: urlCode,
-          originalURL: originalURL,
-          newURL: newURL,
-        };
-        connect.query(
-          "INSERT INTO urls VALUES (?, ?, ?)",
-          Object.values(data),
+    pool.getConnection((err, connection) => {
+      if (err) throw err;
 
-          (error, results) => {
-            if (error) {
-              return res.json({ status: "error", reason: error.code });
-            } else {
-              res.json({ url: data });
+      connection.query(query, [originalURL], (error, results) => {
+        if (error) return res.json({ status: "error", reason: error.code });
+
+        if (results[0]) {
+          res.json({ url: results[0] });
+        } else {
+          const newURL = baseUrl + "/" + urlCode;
+          const data = {
+            urlCode: urlCode,
+            originalURL: originalURL,
+            newURL: newURL,
+          };
+          connect.query(
+            "INSERT INTO urls VALUES (?, ?, ?)",
+            Object.values(data),
+            (error, results) => {
+              if (error) {
+                return res.json({ status: "error", reason: error.code });
+              } else {
+                res.json({ url: data });
+              }
             }
-          }
-        );
-      }
+          );
+        }
+      });
+      connection.release();
     });
   } else {
     res.json(`invalid original url`);
