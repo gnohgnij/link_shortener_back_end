@@ -12,9 +12,13 @@ Click [here](https://github.com/gnohgnij/link_shortener) to view the repository 
 
 | Fields      | Description                                                                       |
 | ----------- | --------------------------------------------------------------------------------- |
-| urlCode     | varchar(255)\unique identifier of the URL\added to the end of the shortened URL |
-| originalURL | varchar(255)\the original URL                                                    |
-| newURL      | varchar(255)\the generated shortened URL                                         |
+| urlCode     | varchar(255)\
+unique identifier of the URL\
+added to the end of the shortened URL |
+| originalURL | varchar(255)\
+the original URL                                                    |
+| newURL      | varchar(255)\
+the generated shortened URL                                         |
 
 **API**
 
