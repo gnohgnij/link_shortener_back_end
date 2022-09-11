@@ -1,10 +1,8 @@
 # Link Shortener Back End
 
-Framework: ExpressJS
+Tech Stack: ExpressJS, NodeJS, MySQL
 
-Database: MySQL
-
-Click [here](https://github.com/gnohgnij/link_shortener) to view the repository for the front end
+Click [here](https://github.com/gnohgnij/link_shortener) to view the repository for the front end.
 
 ## Schema
 
