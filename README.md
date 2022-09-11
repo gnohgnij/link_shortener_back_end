@@ -2,7 +2,7 @@
 
 Tech Stack: ExpressJS, NodeJS, MySQL
 
-Click [here](https://github.com/gnohgnij/link_shortener) to view the repository for the front end.
+Click [here](https://github.com/gnohgnij/link_shortener) to view the repository for the front-end.
 
 ## Schema
 
