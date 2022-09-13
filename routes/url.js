@@ -55,7 +55,7 @@ router.post("/shorten", async (req, res) => {
       connection.release();
     });
   } else {
-    res.json(`Invalid URL`);
+    res.json({ status: "error", reason: "Invalid URL" });
   }
 });
 
