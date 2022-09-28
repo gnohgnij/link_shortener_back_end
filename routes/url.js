@@ -10,7 +10,8 @@ const router = express.Router();
 //create short url
 router.post("/shorten", async (req, res) => {
   const originalURL = req.body.originalURL;
-  const baseUrl = "https://shawwty.herokuapp.com";
+  const threshold = req.body.threshold;
+  const baseUrl = "http://localhost:3306";
 
   //Check base url
   if (!validUrl.isUri(baseUrl)) {
@@ -38,9 +39,11 @@ router.post("/shorten", async (req, res) => {
             urlCode: urlCode,
             originalURL: originalURL,
             newURL: newURL,
+            clicks: 0,
+            threshold: threshold,
           };
-          connect.query(
-            "INSERT INTO urls VALUES (?, ?, ?)",
+          connection.query(
+            "INSERT INTO urls VALUES (?, ?, ?, ?, ?)",
             Object.values(data),
             (error, results) => {
               if (error) {

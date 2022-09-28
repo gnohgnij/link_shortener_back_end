@@ -17,7 +17,32 @@ router.get("/:urlCode", async (req, res) => {
       if (error) {
         return res.json({ status: "error", reason: error.code });
       }
-      res.redirect(results[0].originalURL);
+
+      if (!results[0]) {
+        return res.json({ status: "error", reason: "no records returned" });
+      }
+
+      if (results[0].clicks === results[0].threshold) {
+        return res.json({
+          status: "error",
+          reason: "Number of clicks hit threshold",
+        });
+      } else {
+        const updatedValue = results[0].clicks + 1;
+        const link = results[0].originalURL;
+        connection.query(
+          "UPDATE urls set clicks = ? WHERE urlcode = ?",
+          [updatedValue, req.params.urlCode],
+          (error, results) => {
+            if (error) {
+              connection.release();
+              return res.json({ status: "error", reason: error.code });
+            } else {
+              res.redirect(link);
+            }
+          }
+        );
+      }
     });
 
     connection.release();
