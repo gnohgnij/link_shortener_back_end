@@ -1,4 +1,4 @@
-# Link Shortener Back End
+# Link Shortener Back End (Inactive)
 
 Tech Stack: ExpressJS, NodeJS, MySQL
 
